@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface Product {
@@ -7,6 +8,8 @@ interface Product {
   name: string;
   price: number;
   category: string;
+  color: string;
+  image: string;
 }
 const SmartSearch = () => {
   const [query, setQuery] = useState("");
@@ -36,7 +39,7 @@ const SmartSearch = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder="Search products naturally..."
+            placeholder="Search naturally e.g. cheap blue shoes under 5000"
             className="flex-1 border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
@@ -53,21 +56,24 @@ const SmartSearch = () => {
         {/* Results */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {results.length > 0
-            ? results.map((p) => (
+            ? results.map((rslt) => (
                 <div
-                  key={p.id}
-                  className="p-4 border rounded-xl shadow-sm bg-gray-50 hover:shadow-md transition"
+                  key={rslt.id}
+                  className="border rounded-lg p-3 shadow hover:shadow-lg transition"
                 >
-                  <h2 className="font-semibold text-lg">{p.name}</h2>
-                  <p className="text-sm text-gray-500">{p.category}</p>
-                  <p className="font-bold text-blue-600 mt-2">Rs {p.price}</p>
+                  <Image
+                    src={rslt.image}
+                    alt={rslt.name}
+                    width={100}
+                    height={100}
+                    className="w-full h-40 object-cover rounded-md mb-2"
+                  />
+                  <h2 className="font-semibold">{rslt.name}</h2>
+                  <p className="text-sm text-gray-500">{rslt.category}</p>
+                  <p className="text-blue-600 font-bold">Rs. {rslt.price}</p>
                 </div>
               ))
-            : !loading && (
-                <p className="text-center col-span-full text-gray-500">
-                  No results found
-                </p>
-              )}
+            : !loading && <p className="text-gray-500">No results found</p>}
         </div>
       </div>
     </div>
